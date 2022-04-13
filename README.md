@@ -1,4 +1,5 @@
 # RCAN
+# Updated for Tensorflow 2.0 
 
 This repository is implementation of the "Image Super-Resolution Using Very Deep Residual Channel Attention Networks".
 
@@ -7,6 +8,11 @@ This repository is implementation of the "Image Super-Resolution Using Very Deep
 <center><img src="./figs/fig4.png"></center>
 
 ## Requirements
+
+```bash
+pip install -r requirements.txt 
+```
+
 - PyTorch
 - Tensorflow
 - tqdm

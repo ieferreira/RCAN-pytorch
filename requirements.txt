@@ -1,0 +1,5 @@
+pytorch
+tensorflow
+tqdm
+Numpy
+pillow

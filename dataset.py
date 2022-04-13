@@ -7,9 +7,12 @@ import numpy as np
 import PIL.Image as pil_image
 
 import tensorflow as tf
-config = tf.ConfigProto()
+config = tf.compat.v1.ConfigProto()
 config.gpu_options.allow_growth = True
-tf.enable_eager_execution(config=config)
+
+# not need for tensorflow 2.0 
+# tf.enable_eager_execution(config=config)
+
 
 
 class Dataset(object):
@@ -21,7 +24,7 @@ class Dataset(object):
 
     def __getitem__(self, idx):
         if self.use_fast_loader:
-            hr = tf.read_file(self.image_files[idx])
+            hr = tf.io.read_file(self.image_files[idx])
             hr = tf.image.decode_jpeg(hr, channels=3)
             hr = pil_image.fromarray(hr.numpy())
         else:
