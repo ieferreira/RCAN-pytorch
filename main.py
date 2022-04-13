@@ -9,6 +9,7 @@ from tqdm import tqdm
 from model import RCAN
 from dataset import Dataset
 from utils import AverageMeter
+import logging
 
 cudnn.benchmark = True
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -26,7 +27,7 @@ if __name__ == '__main__':
     parser.add_argument('--reduction', type=int, default=16)
     parser.add_argument('--patch_size', type=int, default=48)
     parser.add_argument('--batch_size', type=int, default=16)
-    parser.add_argument('--num_epochs', type=int, default=20)
+    parser.add_argument('--num_epochs', type=int, default=200)
     parser.add_argument('--save_every', type=int, default=10)
     parser.add_argument('--lr', type=float, default=1e-4)
     parser.add_argument('--threads', type=int, default=8)
@@ -34,6 +35,7 @@ if __name__ == '__main__':
     parser.add_argument('--use_fast_loader', action='store_true')
     opt = parser.parse_args()
 
+    logname = f"{opt.num_epochs}_{opt.images_dir}_{opt.scale}.log"
     if not os.path.exists(opt.outputs_dir):
         os.makedirs(opt.outputs_dir)
 
@@ -51,7 +53,7 @@ if __name__ == '__main__':
                             num_workers=opt.threads,
                             pin_memory=True,
                             drop_last=True)
-
+    average_losses = {}
     for epoch in range(opt.num_epochs):
         epoch_losses = AverageMeter()
 
@@ -73,6 +75,15 @@ if __name__ == '__main__':
                 optimizer.step()
 
                 _tqdm.set_postfix(loss='{:.6f}'.format(epoch_losses.avg))
+                logging.info(f"Epoch {epoch} Loss: {epoch_losses.avg}")
+                average_losses[epoch] = epoch_losses.avg
+                with open(os.path.join(opt.outputs_dir, '{}_epoch_{}.csv'.format(opt.arch, epoch)), 'w') as f:
+                    for key, value in average_losses.items():
+                        f.write("{},{}\n".format(key, value))
+            
                 _tqdm.update(len(inputs))
         if epoch%opt.save_every==0:
             torch.save(model.state_dict(), os.path.join(opt.outputs_dir, '{}_epoch_{}.pth'.format(opt.arch, epoch)))
+            # save average_losses dict as a csv 
+
+
