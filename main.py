@@ -27,6 +27,7 @@ if __name__ == '__main__':
     parser.add_argument('--patch_size', type=int, default=48)
     parser.add_argument('--batch_size', type=int, default=16)
     parser.add_argument('--num_epochs', type=int, default=20)
+    parser.add_argument('--save_every', type=int, default=10)
     parser.add_argument('--lr', type=float, default=1e-4)
     parser.add_argument('--threads', type=int, default=8)
     parser.add_argument('--seed', type=int, default=123)
@@ -73,5 +74,5 @@ if __name__ == '__main__':
 
                 _tqdm.set_postfix(loss='{:.6f}'.format(epoch_losses.avg))
                 _tqdm.update(len(inputs))
-
-        torch.save(model.state_dict(), os.path.join(opt.outputs_dir, '{}_epoch_{}.pth'.format(opt.arch, epoch)))
+        if epoch%opt.save_every==0:
+            torch.save(model.state_dict(), os.path.join(opt.outputs_dir, '{}_epoch_{}.pth'.format(opt.arch, epoch)))
