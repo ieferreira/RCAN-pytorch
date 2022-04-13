@@ -62,6 +62,7 @@ python main.py --scale 2 \
                --patch_size 48 \
                --batch_size 16 \
                --num_epochs 20 \
+               --save_every 10 \
                --lr 1e-4 \
                --threads 8 \
                --seed 123 \
