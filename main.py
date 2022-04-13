@@ -77,7 +77,7 @@ if __name__ == '__main__':
                 _tqdm.set_postfix(loss='{:.6f}'.format(epoch_losses.avg))
                 logging.info(f"Epoch {epoch} Loss: {epoch_losses.avg}")
                 average_losses[epoch] = epoch_losses.avg
-                with open(os.path.join(opt.outputs_dir, '{}_epoch_{}.csv'.format(opt.arch, epoch)), 'w') as f:
+                with open(os.path.join(opt.outputs_dir, '{}_epoch_loss.csv'.format(opt.arch, epoch)), 'w') as f:
                     for key, value in average_losses.items():
                         f.write("{},{}\n".format(key, value))
             
